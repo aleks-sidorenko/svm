@@ -211,8 +211,10 @@ svm()
         (cd $SVM_DIR
         rm -f v* 2>/dev/null
         printf "# syncing with scala-lang.org..."
-        for VER in `curl -s http://scala-webapps.epfl.ch/sbaz/scala-dev -o - |grep '^scala/' |sed -e 's/^scala\//v/'`; do
-            touch $VER
+        for UNIVERSE in scala-dev lamp-rc ; do
+            for VER in `curl -s http://scala-webapps.epfl.ch/sbaz/$UNIVERSE -o - |grep '^scala/' |sed -e 's/^scala\//v/'`; do
+                touch $VER
+            done
         done
         echo " done."
         )
