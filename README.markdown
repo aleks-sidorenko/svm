@@ -4,7 +4,7 @@
 
 To install create a folder somewhere in your filesystem with the "`svm.sh`" file inside it.  To install to a folder called "`.svm`"
 
-    ( mkdir -p ~/.svm && cd ~/.svm && curl -O https://github.com/toolbear74/svm/raw/svm/svm.sh )
+    mkdir -p ~/.svm && curl "https://github.com/toolbear74/svm/raw/svm/svm.sh" -o ~/.svm/svm.sh
 
 Or if you have `git` installed, then just clone it
 
