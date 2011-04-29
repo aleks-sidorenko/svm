@@ -108,13 +108,9 @@ svm()
       if (
         mkdir -p "$SVM_DIR/src" && \
         cd "$SVM_DIR/src" && \
-        curl -C - -# "http://nodejs.org/dist/node-$VERSION.tar.gz" -o "node-$VERSION.tar.gz" && \
-        tar -xzf "node-$VERSION.tar.gz" && \
-        cd "node-$VERSION" && \
-        ./configure --prefix="$SVM_DIR/$VERSION" && \
-        make && \
-        rm -f "$SVM_DIR/$VERSION" 2>/dev/null && \
-        make install
+        curl -C - -# "http://www.scala-lang.org/downloads/distrib/files/scala-${VERSION:1}.tgz" -o "scala-${VERSION:1}.tgz" && \
+        tar -xzf "scala-${VERSION:1}.tgz" && \
+        mv "scala-${VERSION:1}" "$SVM_DIR/$VERSION"
         )
       then
         svm use $VERSION
