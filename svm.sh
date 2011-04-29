@@ -118,10 +118,6 @@ svm()
         )
       then
         svm use $VERSION
-        if ! which npm ; then
-          echo "Installing npm..."
-          curl http://npmjs.org/install.sh | sh
-        fi
       else
         echo "svm: install $VERSION failed!"
       fi
