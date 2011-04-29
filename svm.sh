@@ -1,13 +1,13 @@
-# Node Version Manager
+# Scala Version Manager
 # Implemented as a bash function
 # To use source this file from your bash profile
 #
 # Implemented by Tim Caswell <tim@creationix.com>
 # with much bash help from Matthew Ranney
 
-# Auto detect the NVM_DIR
-if [ ! -d "$NVM_DIR" ]; then
-    export NVM_DIR=$(cd $(dirname ${BASH_SOURCE[0]:-$0}); pwd)
+# Auto detect the SVM_DIR
+if [ ! -d "$SVM_DIR" ]; then
+    export SVM_DIR=$(cd $(dirname ${BASH_SOURCE[0]:-$0}); pwd)
 fi
 
 # Emulate curl with wget, if necessary
@@ -29,12 +29,12 @@ if [ ! `which curl` ]; then
 fi
 
 # Expand a version using the version cache
-nvm_version()
+svm_version()
 {
     PATTERN=$1
     VERSION=''
-    if [ -f "$NVM_DIR/alias/$PATTERN" ]; then
-        nvm_version `cat $NVM_DIR/alias/$PATTERN`
+    if [ -f "$SVM_DIR/alias/$PATTERN" ]; then
+        svm_version `cat $SVM_DIR/alias/$PATTERN`
         return
     fi
     # If it looks like an explicit version, don't do anything funny
@@ -52,138 +52,138 @@ nvm_version()
         PATTERN='*.*.'
     fi
     if [ "$PATTERN" = 'all' ]; then
-        (cd $NVM_DIR; ls -dG v* 2>/dev/null || echo "N/A")
+        (cd $SVM_DIR; ls -dG v* 2>/dev/null || echo "N/A")
         return
     fi
     if [ ! "$VERSION" ]; then
-        VERSION=`(cd $NVM_DIR; ls -d v${PATTERN}* 2>/dev/null) | sort -t. -k 2,1n -k 2,2n -k 3,3n | tail -n1`
+        VERSION=`(cd $SVM_DIR; ls -d v${PATTERN}* 2>/dev/null) | sort -t. -k 2,1n -k 2,2n -k 3,3n | tail -n1`
     fi
     if [ ! "$VERSION" ]; then
         echo "N/A"
         return 13
-    elif [ -e "$NVM_DIR/$VERSION" ]; then
-        (cd $NVM_DIR; ls -dG "$VERSION")
+    elif [ -e "$SVM_DIR/$VERSION" ]; then
+        (cd $SVM_DIR; ls -dG "$VERSION")
     else
         echo "$VERSION"
     fi
 }
 
-nvm()
+svm()
 {
   if [ $# -lt 1 ]; then
-    nvm help
+    svm help
     return
   fi
   case $1 in
     "help" )
       echo
-      echo "Node Version Manager"
+      echo "Scala Version Manager"
       echo
       echo "Usage:"
-      echo "    nvm help                    Show this message"
-      echo "    nvm install <version>       Download and install a <version>"
-      echo "    nvm use <version>           Modify PATH to use <version>"
-      echo "    nvm ls                      List versions (installed versions are blue)"
-      echo "    nvm ls <version>            List versions matching a given description"
-      echo "    nvm deactivate              Undo effects of NVM on current shell"
-      echo "    nvm sync                    Update the local cache of available versions"
-      echo "    nvm alias [<pattern>]       Show all aliases beginning with <pattern>"
-      echo "    nvm alias <name> <version>  Set an alias named <name> pointing to <version>"
+      echo "    svm help                    Show this message"
+      echo "    svm install <version>       Download and install a <version>"
+      echo "    svm use <version>           Modify PATH to use <version>"
+      echo "    svm ls                      List versions (installed versions are blue)"
+      echo "    svm ls <version>            List versions matching a given description"
+      echo "    svm deactivate              Undo effects of SVM on current shell"
+      echo "    svm sync                    Update the local cache of available versions"
+      echo "    svm alias [<pattern>]       Show all aliases beginning with <pattern>"
+      echo "    svm alias <name> <version>  Set an alias named <name> pointing to <version>"
       echo
       echo "Example:"
-      echo "    nvm install v0.4.0          Install a specific version number"
-      echo "    nvm use stable              Use the stable release"
-      echo "    nvm install latest          Install the latest, possibly unstable version"
-      echo "    nvm use 0.2                 Use the latest available 0.2.x release"
-      echo "    nvm alias default v0.4.0    Set v0.4.0 as the default" 
+      echo "    svm install v0.4.0          Install a specific version number"
+      echo "    svm use stable              Use the stable release"
+      echo "    svm install latest          Install the latest, possibly unstable version"
+      echo "    svm use 0.2                 Use the latest available 0.2.x release"
+      echo "    svm alias default v0.4.0    Set v0.4.0 as the default" 
       echo
     ;;
     "install" )
       if [ $# -ne 2 ]; then
-        nvm help
+        svm help
         return
       fi
       [ "$NOCURL" ] && curl && return
-      VERSION=`nvm_version $2`
+      VERSION=`svm_version $2`
       if (
-        mkdir -p "$NVM_DIR/src" && \
-        cd "$NVM_DIR/src" && \
+        mkdir -p "$SVM_DIR/src" && \
+        cd "$SVM_DIR/src" && \
         curl -C - -# "http://nodejs.org/dist/node-$VERSION.tar.gz" -o "node-$VERSION.tar.gz" && \
         tar -xzf "node-$VERSION.tar.gz" && \
         cd "node-$VERSION" && \
-        ./configure --prefix="$NVM_DIR/$VERSION" && \
+        ./configure --prefix="$SVM_DIR/$VERSION" && \
         make && \
-        rm -f "$NVM_DIR/$VERSION" 2>/dev/null && \
+        rm -f "$SVM_DIR/$VERSION" 2>/dev/null && \
         make install
         )
       then
-        nvm use $VERSION
+        svm use $VERSION
         if ! which npm ; then
           echo "Installing npm..."
           curl http://npmjs.org/install.sh | sh
         fi
       else
-        echo "nvm: install $VERSION failed!"
+        echo "svm: install $VERSION failed!"
       fi
     ;;
     "deactivate" )
-      if [[ $PATH == *$NVM_DIR/*/bin* ]]; then
-        export PATH=${PATH%$NVM_DIR/*/bin*}${PATH#*$NVM_DIR/*/bin:}
-        echo "$NVM_DIR/*/bin removed from \$PATH"
+      if [[ $PATH == *$SVM_DIR/*/bin* ]]; then
+        export PATH=${PATH%$SVM_DIR/*/bin*}${PATH#*$SVM_DIR/*/bin:}
+        echo "$SVM_DIR/*/bin removed from \$PATH"
       else
-        echo "Could not find $NVM_DIR/*/bin in \$PATH"
+        echo "Could not find $SVM_DIR/*/bin in \$PATH"
       fi
-      if [[ $MANPATH == *$NVM_DIR/*/share/man* ]]; then
-        export MANPATH=${MANPATH%$NVM_DIR/*/share/man*}${MANPATH#*$NVM_DIR/*/share/man:}
-        echo "$NVM_DIR/*/share/man removed from \$MANPATH"
+      if [[ $MANPATH == *$SVM_DIR/*/share/man* ]]; then
+        export MANPATH=${MANPATH%$SVM_DIR/*/share/man*}${MANPATH#*$SVM_DIR/*/share/man:}
+        echo "$SVM_DIR/*/share/man removed from \$MANPATH"
       else
-        echo "Could not find $NVM_DIR/*/share/man in \$MANPATH"
+        echo "Could not find $SVM_DIR/*/share/man in \$MANPATH"
       fi
     ;;
     "use" )
       if [ $# -ne 2 ]; then
-        nvm help
+        svm help
         return
       fi
-      VERSION=`nvm_version $2`
-      if [ ! -d $NVM_DIR/$VERSION ]; then
+      VERSION=`svm_version $2`
+      if [ ! -d $SVM_DIR/$VERSION ]; then
         echo "$VERSION version is not installed yet"
         return;
       fi
-      if [[ $PATH == *$NVM_DIR/*/bin* ]]; then
-        PATH=${PATH%$NVM_DIR/*/bin*}$NVM_DIR/$VERSION/bin${PATH#*$NVM_DIR/*/bin}
+      if [[ $PATH == *$SVM_DIR/*/bin* ]]; then
+        PATH=${PATH%$SVM_DIR/*/bin*}$SVM_DIR/$VERSION/bin${PATH#*$SVM_DIR/*/bin}
       else
-        PATH="$NVM_DIR/$VERSION/bin:$PATH"
+        PATH="$SVM_DIR/$VERSION/bin:$PATH"
       fi
-      if [[ $MANPATH == *$NVM_DIR/*/share/man* ]]; then
-        MANPATH=${MANPATH%$NVM_DIR/*/share/man*}$NVM_DIR/$VERSION/share/man${MANPATH#*$NVM_DIR/*/share/man}
+      if [[ $MANPATH == *$SVM_DIR/*/share/man* ]]; then
+        MANPATH=${MANPATH%$SVM_DIR/*/share/man*}$SVM_DIR/$VERSION/share/man${MANPATH#*$SVM_DIR/*/share/man}
       else
-        MANPATH="$NVM_DIR/$VERSION/share/man:$MANPATH"
+        MANPATH="$SVM_DIR/$VERSION/share/man:$MANPATH"
       fi
       export PATH
       export MANPATH
-      export NVM_PATH="$NVM_DIR/$VERSION/lib/node"
-      export NVM_BIN="$NVM_DIR/$VERSION/bin"
-      echo "Now using node $VERSION"
+      export SVM_PATH="$SVM_DIR/$VERSION/lib/node"
+      export SVM_BIN="$SVM_DIR/$VERSION/bin"
+      echo "Now using scala $VERSION"
     ;;
     "ls" )
       if [ $# -ne 1 ]; then
-        nvm_version $2
+        svm_version $2
         return
       fi
-      nvm_version all
+      svm_version all
       for P in {stable,latest,current}; do
-          echo -ne "$P: \t"; nvm_version $P
+          echo -ne "$P: \t"; svm_version $P
       done
-      nvm alias
-      echo "# use 'nvm sync' to update from nodejs.org"
+      svm alias
+      echo "# use 'svm sync' to update from nodejs.org"
     ;;
     "alias" )
-      mkdir -p $NVM_DIR/alias
+      mkdir -p $SVM_DIR/alias
       if [ $# -le 2 ]; then
-        (cd $NVM_DIR/alias && for ALIAS in `ls $2* 2>/dev/null`; do
+        (cd $SVM_DIR/alias && for ALIAS in `ls $2* 2>/dev/null`; do
             DEST=`cat $ALIAS`
-            VERSION=`nvm_version $DEST`
+            VERSION=`svm_version $DEST`
             if [ "$DEST" = "$VERSION" ]; then
                 echo "$ALIAS -> $DEST"
             else
@@ -193,16 +193,16 @@ nvm()
         return
       fi
       if [ ! "$3" ]; then
-          rm -f $NVM_DIR/alias/$2
+          rm -f $SVM_DIR/alias/$2
           echo "$2 -> *poof*"
           return
       fi
-      mkdir -p $NVM_DIR/alias
-      VERSION=`nvm_version $3`
+      mkdir -p $SVM_DIR/alias
+      VERSION=`svm_version $3`
       if [ $? -ne 0 ]; then
         echo "! WARNING: Version '$3' does not exist." >&2 
       fi
-      echo $3 > "$NVM_DIR/alias/$2"
+      echo $3 > "$SVM_DIR/alias/$2"
       if [ ! "$3" = "$VERSION" ]; then
           echo "$2 -> $3 (-> $VERSION)"
           echo "! WARNING: Moving target. Aliases to implicit versions may change without warning."
@@ -212,9 +212,9 @@ nvm()
     ;;
     "sync" )
         [ "$NOCURL" ] && curl && return
-        LATEST=`nvm_version latest`
-        STABLE=`nvm_version stable`
-        (cd $NVM_DIR
+        LATEST=`svm_version latest`
+        STABLE=`svm_version stable`
+        (cd $SVM_DIR
         rm -f v* 2>/dev/null
         printf "# syncing with nodejs.org..."
         for VER in `curl -s http://nodejs.org/dist/ -o - | grep 'node-v.*\.tar\.gz' | sed -e 's/.*node-//' -e 's/\.tar\.gz.*//'`; do
@@ -222,20 +222,20 @@ nvm()
         done
         echo " done."
         )
-        [ "$STABLE" = `nvm_version stable` ] || echo "NEW stable: `nvm_version stable`"
-        [ "$LATEST" = `nvm_version latest` ] || echo "NEW latest: `nvm_version latest`"
+        [ "$STABLE" = `svm_version stable` ] || echo "NEW stable: `svm_version stable`"
+        [ "$LATEST" = `svm_version latest` ] || echo "NEW latest: `svm_version latest`"
     ;;
     "clear-cache" )
-        rm -f $NVM_DIR/v* 2>/dev/null
+        rm -f $SVM_DIR/v* 2>/dev/null
         echo "Cache cleared."
     ;;
     "version" )
-        nvm_version $2
+        svm_version $2
     ;;
     * )
-      nvm help
+      svm help
     ;;
   esac
 }
 
-nvm ls default >/dev/null 2>&1 && nvm use default >/dev/null
+svm ls default >/dev/null 2>&1 && svm use default >/dev/null
