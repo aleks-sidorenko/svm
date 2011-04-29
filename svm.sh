@@ -156,7 +156,6 @@ svm()
       fi
       export PATH
       export MANPATH
-      export SVM_PATH="$SVM_DIR/$VERSION/lib/node"
       export SVM_BIN="$SVM_DIR/$VERSION/bin"
       echo "Now using scala $VERSION"
     ;;
@@ -170,7 +169,7 @@ svm()
           echo -ne "$P: \t"; svm_version $P
       done
       svm alias
-      echo "# use 'svm sync' to update from nodejs.org"
+      echo "# use 'svm sync' to update from scala-lang.org"
     ;;
     "alias" )
       mkdir -p $SVM_DIR/alias
@@ -210,8 +209,8 @@ svm()
         STABLE=`svm_version stable`
         (cd $SVM_DIR
         rm -f v* 2>/dev/null
-        printf "# syncing with nodejs.org..."
-        for VER in `curl -s http://nodejs.org/dist/ -o - | grep 'node-v.*\.tar\.gz' | sed -e 's/.*node-//' -e 's/\.tar\.gz.*//'`; do
+        printf "# syncing with scala-lang.org..."
+        for VER in `curl -s http://scala-webapps.epfl.ch/sbaz/scala-dev -o - |grep '^scala/' |sed -e 's/^scala\//v/'`; do
             touch $VER
         done
         echo " done."
