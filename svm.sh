@@ -43,10 +43,11 @@ svm_version()
     fi
     # The default version is the current one
     if [ ! "$PATTERN" -o "$PATTERN" = 'current' ]; then
-        VERSION=`node -v 2>/dev/null`
+        VERSION=`scala -version 2>/dev/null |perl -pe 's/^.*version (\d+\.\d+\.\d+\.(final|RC\d)) -- .*$/\1/g'`
+        [ "$VERSION" ] && VERSION="v$VERSION"
     fi
     if [ "$PATTERN" = 'stable' ]; then
-        PATTERN='*.*[02468].'
+        PATTERN='*.*final'
     fi
     if [ "$PATTERN" = 'latest' ]; then
         PATTERN='*.*.'
