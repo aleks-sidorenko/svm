@@ -17,6 +17,7 @@ if [ ! `which curl` ]; then
             ARGS="$* "
             ARGS=${ARGS/-s /-q }
             ARGS=${ARGS/-\# /}
+            ARGS=${ARGS/-0 /}
             ARGS=${ARGS/-C - /-c }
             ARGS=${ARGS/-o /-O }
 
@@ -109,7 +110,7 @@ svm()
       if (
         mkdir -p "$SVM_DIR/src" && \
         cd "$SVM_DIR/src" && \
-        curl -C - -# "http://www.scala-lang.org/downloads/distrib/files/scala-${VERSION:1}.tgz" -o "scala-${VERSION:1}.tgz" && \
+        curl -0 -C - -# "http://www.scala-lang.org/downloads/distrib/files/scala-${VERSION:1}.tgz" -o "scala-${VERSION:1}.tgz" && \
         tar -xzf "scala-${VERSION:1}.tgz" && \
         mv "scala-${VERSION:1}" "$SVM_DIR/$VERSION"
         )
