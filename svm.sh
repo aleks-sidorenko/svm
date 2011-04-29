@@ -112,6 +112,7 @@ svm()
         cd "$SVM_DIR/src" && \
         curl -0 -C - -# "http://www.scala-lang.org/downloads/distrib/files/scala-${VERSION:1}.tgz" -o "scala-${VERSION:1}.tgz" && \
         tar -xzf "scala-${VERSION:1}.tgz" && \
+        rm -rf "$SVM_DIR/$VERSION" && \
         mv "scala-${VERSION:1}" "$SVM_DIR/$VERSION"
         )
       then
