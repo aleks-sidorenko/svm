@@ -54,17 +54,17 @@ svm_version()
         PATTERN='*.*.'
     fi
     if [ "$PATTERN" = 'all' ]; then
-        (cd $SVM_DIR; ls -dG v* 2>/dev/null || echo "N/A")
+        (cd $SVM_DIR; \ls -dG v* 2>/dev/null || echo "N/A")
         return
     fi
     if [ ! "$VERSION" ]; then
-        VERSION=`(cd $SVM_DIR; ls -d v${PATTERN}* 2>/dev/null) | sort -t. -k 2,1n -k 2,2n -k 3,3n | tail -n1`
+        VERSION=`(cd $SVM_DIR; \ls -d v${PATTERN}* 2>/dev/null) | sort -t. -k 2,1n -k 2,2n -k 3,3n | tail -n1`
     fi
     if [ ! "$VERSION" ]; then
         echo "N/A"
         return 13
     elif [ -e "$SVM_DIR/$VERSION" ]; then
-        (cd $SVM_DIR; ls -dG "$VERSION")
+        (cd $SVM_DIR; \ls -dG "$VERSION")
     else
         echo "$VERSION"
     fi
@@ -175,7 +175,7 @@ svm()
     "alias" )
       mkdir -p $SVM_DIR/alias
       if [ $# -le 2 ]; then
-        (cd $SVM_DIR/alias && for ALIAS in `ls $2* 2>/dev/null`; do
+        (cd $SVM_DIR/alias && for ALIAS in `\ls $2* 2>/dev/null`; do
             DEST=`cat $ALIAS`
             VERSION=`svm_version $DEST`
             if [ "$DEST" = "$VERSION" ]; then
