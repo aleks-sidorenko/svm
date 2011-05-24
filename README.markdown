@@ -42,6 +42,11 @@ For full commands and more more usage examples:
 
     svm help
 
+## Alternatives
+
+* **sbaz** - the [Scala Bazaar System](http://www.scala-lang.org/node/93) managed 3rd party libraries, but can also upgrade your Scala install
+* **sbt** - [Simple Build Tool](http://code.google.com/p/simple-build-tool/) can [cross build](http://code.google.com/p/simple-build-tool/wiki/CrossBuild) your project to multiple Scala versions
+
 ## Attribution
 
 Based on [Node Version Manager][1] by Tim Caswell
