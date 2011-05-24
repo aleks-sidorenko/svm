@@ -1,5 +1,7 @@
 # Scala Version Manager
 
+Simple bash script to manage multiple active scala versions
+
 ## Installation
 
 To install create a folder somewhere in your filesystem with the "`svm.sh`" file inside it.  To install to a folder called "`.svm`"
