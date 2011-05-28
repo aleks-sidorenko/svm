@@ -33,6 +33,7 @@ fi
 svm_version()
 {
     PATTERN=$1
+    local IGNORE=
     VERSION=''
     if [ -f "$SVM_DIR/alias/$PATTERN" ]; then
         svm_version `cat $SVM_DIR/alias/$PATTERN`
@@ -44,11 +45,12 @@ svm_version()
     fi
     # The default version is the current one
     if [ ! "$PATTERN" -o "$PATTERN" = 'current' ]; then
-        VERSION=`scala -version 2>/dev/null |perl -pe 's/^.*version (\d+\.\d+\.\d+\.(final|RC\d)) -- .*$/\1/g'`
+        VERSION=`scala -version 2>/dev/null |perl -pe 's/^.*version (\d+\.\d+\.\d+\.[0-9a-zA-Z-]+).*$/\1/g'`
         [ "$VERSION" ] && VERSION="v$VERSION"
     fi
     if [ "$PATTERN" = 'stable' ]; then
-        PATTERN='*.*final'
+        PATTERN='*.*.'
+        IGNORE='*.Beta*:*.RC*'
     fi
     if [ "$PATTERN" = 'latest' ]; then
         PATTERN='*.*.'
@@ -58,7 +60,7 @@ svm_version()
         return
     fi
     if [ ! "$VERSION" ]; then
-        VERSION=`(cd $SVM_DIR; \ls -d v${PATTERN}* 2>/dev/null) | sort -t. -k 2,1n -k 2,2n -k 3,3n | tail -n1`
+        VERSION=`(GLOBIGNORE=$IGNORE; cd $SVM_DIR; \ls -d v${PATTERN}* 2>/dev/null) | sort -t. -k 2,1n -k 2,2n -k 3,3n -k 4,4n | tail -n1`
     fi
     if [ ! "$VERSION" ]; then
         echo "N/A"
