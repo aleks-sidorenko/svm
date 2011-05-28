@@ -14,7 +14,7 @@ fi
 if [ ! `which curl` ]; then
     if [ `which wget` ]; then
         curl() {
-            ARGS="$* "
+            local ARGS="$* "
             ARGS=${ARGS/-s /-q }
             ARGS=${ARGS/-\# /}
             ARGS=${ARGS/-0 /}
@@ -32,9 +32,9 @@ fi
 # Expand a version using the version cache
 svm_version()
 {
-    PATTERN=$1
+    local PATTERN=$1
     local IGNORE=
-    VERSION=''
+    local VERSION=''
     if [ -f "$SVM_DIR/alias/$PATTERN" ]; then
         svm_version `cat $SVM_DIR/alias/$PATTERN`
         return
@@ -78,6 +78,7 @@ svm()
     svm help
     return
   fi
+  local VERSION
   case $1 in
     "help" )
       echo
@@ -136,6 +137,7 @@ svm()
       else
         echo "Could not find $SVM_DIR/*/share/man in \$MANPATH"
       fi
+      unset SVM_BIN
     ;;
     "use" )
       if [ $# -ne 2 ]; then
@@ -178,7 +180,7 @@ svm()
       mkdir -p $SVM_DIR/alias
       if [ $# -le 2 ]; then
         (cd $SVM_DIR/alias && for ALIAS in `\ls $2* 2>/dev/null`; do
-            DEST=`cat $ALIAS`
+            local DEST=`cat $ALIAS`
             VERSION=`svm_version $DEST`
             if [ "$DEST" = "$VERSION" ]; then
                 echo "$ALIAS -> $DEST"
@@ -208,8 +210,8 @@ svm()
     ;;
     "sync" )
         [ "$NOCURL" ] && curl && return
-        LATEST=`svm_version latest`
-        STABLE=`svm_version stable`
+        local LATEST=`svm_version latest`
+        local STABLE=`svm_version stable`
         (cd $SVM_DIR
         rm -f v* 2>/dev/null
         printf "# syncing with scala-lang.org..."
