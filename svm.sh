@@ -113,7 +113,7 @@ svm()
       if (
         mkdir -p "$SVM_DIR/src" && \
         cd "$SVM_DIR/src" && \
-        curl -0 -C - -# "http://www.scala-lang.org/downloads/distrib/files/scala-${VERSION:1}.tgz" -o "scala-${VERSION:1}.tgz" && \
+        curl -0 -C - -# "http://www.scala-lang.org/files/archive/scala-${VERSION:1}.tgz" -o "scala-${VERSION:1}.tgz" && \
         tar -xzf "scala-${VERSION:1}.tgz" && \
         rm -rf "$SVM_DIR/$VERSION" && \
         mv "scala-${VERSION:1}" "$SVM_DIR/$VERSION"
@@ -210,16 +210,16 @@ svm()
     ;;
     "sync" )
         [ "$NOCURL" ] && curl && return
-        local BASE=http://scala-webapps.epfl.ch/sbaz
         local LATEST=`svm_version latest`
         local STABLE=`svm_version stable`
         (cd $SVM_DIR
         rm -f v* 2>/dev/null
         printf "# syncing with scala-lang.org..."
-        for UNIVERSE in scala-dev lamp-rc ; do
-            for VER in `curl -s $BASE/$UNIVERSE -o - |grep '^scala/' |grep -Pv '^scala/(1\.|2\.[0-6]\.|2\.7\.0-|2\.7\.1\.|2\.7\.2\.RC1)' |sed -e 's/^scala\//v/'`; do
-                touch $VER
-            done
+        # For testing download the file.html and run commands against it.
+        # curl -s http://www.scala-lang.org/files/archive/ -o file.html
+        # cat file.html | grep -o -E 'href="(scala-)[^"#]+(\d+\\.)?(\d+\\.)?(\\*|\d+).tgz"' | cut -d'"' -f2 | sed -E 's/(scala-)(.*).tgz/\2/' | grep -v  "sources\|\-api\|\-devel\-docs\|\-sbaz\|\-jvm4\|tool\-support\|docs"| sort | uniq | sed -e 's/^/v/'
+        for VER in `curl -s http://www.scala-lang.org/files/archive/ -o - | grep -o -E 'href="(scala-)[^"#]+(\d+\\.)?(\d+\\.)?(\\*|\d+).tgz"' | cut -d'"' -f2 | sed -E 's/(scala-)(.*).tgz/\2/' | grep -v  "sources\|\-api\|\-devel\-docs\|\-sbaz\|\-jvm4\|tool\-support\|docs"| sort | uniq | sed -e 's/^/v/'`; do
+          touch $VER
         done
         echo " done."
         )
