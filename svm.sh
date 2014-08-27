@@ -218,8 +218,8 @@ svm()
         # For testing download the file.html and run commands against it.
         # curl -s http://www.scala-lang.org/files/archive/ -o file.html
         # cat file.html | grep -o -E 'href="(scala-)[^"#]+(\d+\\.)?(\d+\\.)?(\\*|\d+).tgz"' | cut -d'"' -f2 | sed -E 's/(scala-)(.*).tgz/\2/' | grep -v  "sources\|\-api\|\-devel\-docs\|\-sbaz\|\-jvm4\|tool\-support\|docs"| sort | uniq | sed -e 's/^/v/'
-        for VER in `curl -s http://www.scala-lang.org/files/archive/ -o - | grep -o -E 'href="(scala-)[^"#]+(\d+\\.)?(\d+\\.)?(\\*|\d+).tgz"' | cut -d'"' -f2 | sed -E 's/(scala-)(.*).tgz/\2/' | grep -v  "sources\|\-api\|\-devel\-docs\|\-sbaz\|\-jvm4\|tool\-support\|docs"| sort | uniq | sed -e 's/^/v/'`; do
-          touch $VER
+        for VER in $(curl -s http://www.scala-lang.org/files/archive/ -o - | grep -o -E 'href="(scala-)[^"#]+(\d+\\.)?(\d+\\.)?(\\*|\d+).tgz"' | cut -d'"' -f2 | sed -E 's/(scala-)(.*).tgz/\2/' | grep -v "sources\|\-api\|\-devel\-docs\|\-sbaz\|\-jvm4\|tool\-support\|docs"| sort | uniq | sed -e 's/^/v/'); do
+         touch $VER
         done
         echo " done."
         )
