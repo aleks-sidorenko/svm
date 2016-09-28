@@ -6,7 +6,7 @@ Simple bash script to manage multiple active scala versions
 
 To install create a folder somewhere in your filesystem with the "`svm.sh`" file inside it.  To install to a folder called "`.svm`"
 
-    mkdir -p ~/.svm && curl "https://github.com/toolbear/svm/raw/svm/svm.sh" -o ~/.svm/svm.sh
+    mkdir -p ~/.svm && curl "https://github.com/aleks-sidorenko/svm/raw/svm/svm.sh" -o ~/.svm/svm.sh
 
 Or if you have `git` installed, then just clone it
 
